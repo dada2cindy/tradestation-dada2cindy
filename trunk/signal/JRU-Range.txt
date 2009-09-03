@@ -1,0 +1,144 @@
+Inputs: AccelFactor(.02), Target(0), Target2(0), Target3(0), DollarRisk(0), DollarRisk2(0), DollarRisk3(0);
+Variables: ParabolicValue(0), OrderPrice(0), times(0), Inprice(0);
+
+ParabolicValue = Parabolic(AccelFactor);
+
+If MarketPosition = 0 Then Begin
+	
+	times = 0;
+
+	If Low <= ParabolicValue and (MarketPosition(1) = 1 or MarketPosition(1) = 0) Then 
+		
+		Sell ("Short") Next Bar at Open;
+
+	If High >= ParabolicValue and (MarketPosition(1) = -1 or MarketPosition(1) = 0)  Then 
+		
+		Buy ("Long") Next Bar at Open;
+
+End;
+If MarketPosition = 1 Then Begin
+	
+	If times = 0 Then OrderPrice = EntryPrice;
+
+	If Open[1] >=100 AND Open[1] < 200 Then Begin
+		
+	If High >= OrderPrice + Target Then Begin
+		OrderPrice = Open of Next Bar ;
+		times = times + 1;
+	End;
+
+	If Low <= OrderPrice - DollarRisk Then Begin
+		OrderPrice = Open of Next Bar ;
+		times = times + 1;
+	End;
+	If OrderPrice - DollarRisk <= ParabolicValue Then Begin
+		
+		ExitLong ("LX") Next Bar at OrderPrice - DollarRisk Stop;
+
+	End;
+
+	End;
+
+	If Open[1] >=200 AND Open[1] < 300 Then Begin
+		
+	If High >= OrderPrice + Target2 Then Begin
+		OrderPrice = Open of Next Bar ;
+		times = times + 1;
+	End;
+
+	If Low <= OrderPrice - DollarRisk2 Then Begin
+		OrderPrice = Open of Next Bar ;
+		times = times + 1;
+	End;
+	If OrderPrice - DollarRisk2 <= ParabolicValue Then Begin
+		
+		ExitLong ("LX2") Next Bar at OrderPrice - DollarRisk2 Stop;
+
+	End;
+
+	End;
+
+	If Open[1] >=300 AND Open[1] < 400 Then Begin
+		
+	If High >= OrderPrice + Target3 Then Begin
+		OrderPrice = Open of Next Bar ;
+		times = times + 1;
+	End;
+
+	If Low <= OrderPrice - DollarRisk3 Then Begin
+		OrderPrice = Open of Next Bar ;
+		times = times + 1;
+	End;
+	If OrderPrice - DollarRisk3 <= ParabolicValue Then Begin
+		
+		ExitLong ("LX3") Next Bar at OrderPrice - DollarRisk3 Stop;
+
+	End;
+
+	End;
+	
+End;
+
+If MarketPosition = -1 Then Begin
+	
+	If times = 0 Then OrderPrice = EntryPrice;
+	
+	If Open[1] >=100 AND Open[1] < 200 Then Begin
+			
+	If Low <= OrderPrice - Target Then Begin
+		OrderPrice = Open of Next Bar ;
+		times = times + 1;
+	End;
+
+	If High >= OrderPrice + DollarRisk Then Begin
+		OrderPrice = Open of Next Bar ;
+		times = times + 1;
+	End;
+	If OrderPrice + DollarRisk >= ParabolicValue Then Begin
+		
+		ExitShort ("SX") Next Bar at OrderPrice + DollarRisk Stop;
+
+	End;
+
+	End;
+
+	If Open[1] >=200 AND Open[1] < 300 Then Begin
+			
+	If Low <= OrderPrice - Target2 Then Begin
+		OrderPrice = Open of Next Bar ;
+		times = times + 1;
+	End;
+
+	If High >= OrderPrice + DollarRisk2 Then Begin
+		OrderPrice = Open of Next Bar ;
+		times = times + 1;
+	End;
+	If OrderPrice + DollarRisk2 >= ParabolicValue Then Begin
+		
+		ExitShort ("SX2") Next Bar at OrderPrice + DollarRisk2 Stop;
+
+	End;
+
+	End;
+
+	If Open[1] >=300 AND Open[1] < 400 Then Begin
+			
+	If Low <= OrderPrice - Target3 Then Begin
+		OrderPrice = Open of Next Bar ;
+		times = times + 1;
+	End;
+
+	If High >= OrderPrice + DollarRisk3 Then Begin
+		OrderPrice = Open of Next Bar ;
+		times = times + 1;
+	End;
+	If OrderPrice + DollarRisk3 >= ParabolicValue Then Begin
+		
+		ExitShort ("SX3") Next Bar at OrderPrice + DollarRisk3 Stop;
+
+	End;
+
+	End;
+	
+End;
+
