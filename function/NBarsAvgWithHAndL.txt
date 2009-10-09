@@ -1,0 +1,13 @@
+{*******************************************************************
+Description: NBarsAvgWithHighAndLow
+Provided By: WuDADA, Inc. (c) Copyright 2009
+********************************************************************}
+
+Inputs:LengthHigh(NumericSimple),LengthLow(NumericSimple);
+variables:NHigh(0),NLow(0),NAvg(0);
+
+NHigh=highest(High,LengthHigh)[1];
+NLow=lowest(Low,LengthLow)[1];
+NAvg=(NHigh+NLow)/2;
+
+NBarsAvgWithHAndL = NAvg;
