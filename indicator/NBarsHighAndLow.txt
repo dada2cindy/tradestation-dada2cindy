@@ -1,0 +1,10 @@
+input:LengthHigh(50),LengthLow(50);
+variables:NHigh(0),NLow(0),NAvg(0);
+
+NHigh=highest(high,LengthHigh)[1];
+NLow=lowest(low,LengthLow)[1];
+NAvg=(NHigh+NLow)/2;
+
+plot1(NHigh,"h");
+plot2(NLow,"l");
+plot3(NAvg,"a");
