@@ -10,8 +10,6 @@ NLow=lowest(Low,LengthLow)[1];
 NAvg = NBarsAvgWithHAndL( LengthHigh , LengthLow );
 MaxProfitPoint = MaxPositionProfit/5000;
 ParabolicValue = Parabolic(AccelFactor);
-
-ParabolicValue = Parabolic(AccelFactor);
 	
 If Signal = 1 AND times > 0 AND ExitFlag = 0 Then Begin
 	
