@@ -1,0 +1,204 @@
+Inputs: AccelFactor(.02), Target(0), Target2(0), Target3(0), DollarRisk(0), DollarRisk2(0), DollarRisk3(0), BackProfitMin(0);
+Variables: ParabolicValue(0), OrderPrice(0), times(0), Inprice(0), Signal(0), SignalFlag(0), ExitFlag(0), IniPrice(0);
+inputs:LengthHigh(50),LengthLow(50);
+variables:NAvg(0), MaxProfitPoint(0), BackProfigFlag(0);
+
+{*
+NHigh=highest(High,LengthHigh)[1];
+NLow=lowest(Low,LengthLow)[1];
+*}
+NAvg = NBarsAvgWithHAndL( LengthHigh , LengthLow );
+MaxProfitPoint = MaxPositionProfit/5000;
+ParabolicValue = Parabolic(AccelFactor);
+	
+If Signal = 1 AND times > 0 AND ExitFlag = 0 Then Begin
+	
+	If Open[1] >=100 AND Open[1] < 200 Then Begin		
+		If High >= OrderPrice + Target Then Begin
+			OrderPrice = Open of Next Bar ;
+		End;
+		If Low <= OrderPrice - DollarRisk And ((OrderPrice - DollarRisk) > ParabolicValue) Then Begin
+			OrderPrice = Open of Next Bar ;
+		End;
+		IF ((Low - EntryPrice) < (MaxProfitPoint - DollarRisk)) And Low <= ParabolicValue And MaxProfitPoint > BackProfitMin Then Begin
+			ExitLong ("LX-BP") Next Bar at ParabolicValue Stop;
+			BackProfigFlag = Signal;
+    	End;
+		If OrderPrice - DollarRisk <= ParabolicValue Then Begin
+			If MarketPosition = 1 Then Begin
+				ExitLong ("LX") Next Bar at OrderPrice - DollarRisk Stop;
+			End;
+			If Low <= OrderPrice - DollarRisk Then Begin				
+				ExitFlag = 1;
+			End;
+		End;
+	End;
+
+	If Open[1] >=200 AND Open[1] < 300 Then Begin		
+		If High >= OrderPrice + Target2 Then Begin
+			OrderPrice = Open of Next Bar ;
+		End;
+		If Low <= OrderPrice - DollarRisk2 And ((OrderPrice - DollarRisk2) > ParabolicValue) Then Begin
+			OrderPrice = Open of Next Bar ;
+		End;
+		IF ((Low - EntryPrice) < (MaxProfitPoint - DollarRisk2)) And Low <= ParabolicValue And MaxProfitPoint > BackProfitMin Then Begin
+			ExitLong ("LX2-BP") Next Bar at ParabolicValue Stop;
+			BackProfigFlag = Signal;
+    	End;
+		If OrderPrice - DollarRisk2 <= ParabolicValue Then Begin
+			If MarketPosition = 1 Then Begin
+				ExitLong ("LX2") Next Bar at OrderPrice - DollarRisk2 Stop;	
+			End;
+			If Low <= OrderPrice - DollarRisk2 Then Begin
+				ExitFlag = 1;
+			End;
+		End;
+	End;
+
+	If Open[1] >=300 AND Open[1] < 400 Then Begin	
+		If High >= OrderPrice + Target3 Then Begin
+			OrderPrice = Open of Next Bar ;
+		End;
+		If Low <= OrderPrice - DollarRisk3 And ((OrderPrice - DollarRisk3) > ParabolicValue) Then Begin
+			OrderPrice = Open of Next Bar ;
+		End;
+		IF ((Low - EntryPrice) < (MaxProfitPoint - DollarRisk3)) And Low <= ParabolicValue And MaxProfitPoint > BackProfitMin Then Begin
+			ExitLong ("LX3-BP") Next Bar at ParabolicValue Stop;
+			BackProfigFlag = Signal;
+    	End;
+		If OrderPrice - DollarRisk3 <= ParabolicValue Then Begin
+			If MarketPosition = 1 Then Begin
+				ExitLong ("LX3") Next Bar at OrderPrice - DollarRisk3 Stop;
+			End;
+			If Low <= OrderPrice - DollarRisk3 Then Begin				
+				ExitFlag = 1;
+			End;
+		End;
+	End;
+End;
+
+If Signal = -1 AND times > 0 AND ExitFlag = 0 Then Begin
+
+	If Open[1] >=100 AND Open[1] < 200 Then Begin
+		If Low <= OrderPrice - Target Then Begin
+			OrderPrice = Open of Next Bar ;
+		End;
+		If High >= OrderPrice + DollarRisk And ((OrderPrice + DollarRisk) < ParabolicValue) Then Begin
+			OrderPrice = Open of Next Bar ;
+		End;
+		IF ((EntryPrice - High) < (MaxProfitPoint - DollarRisk)) And High >= ParabolicValue And MaxProfitPoint > BackProfitMin Then Begin
+			ExitShort ("SX-BP") Next Bar at ParabolicValue Stop;
+			BackProfigFlag = Signal;
+    	End;
+		If OrderPrice + DollarRisk >= ParabolicValue Then Begin
+			If MarketPosition = -1 Then Begin
+				ExitShort ("SX") Next Bar at OrderPrice + DollarRisk Stop;
+			End;
+			If High >= OrderPrice + DollarRisk Then Begin				
+				ExitFlag = 1;
+			End;
+		End;
+	End;
+
+	If Open[1] >=200 AND Open[1] < 300 Then Begin		
+		If Low <= OrderPrice - Target2 Then Begin
+			OrderPrice = Open of Next Bar ;
+		End;
+		If High >= OrderPrice + DollarRisk2 And ((OrderPrice + DollarRisk2) < ParabolicValue) Then Begin
+			OrderPrice = Open of Next Bar ;
+		End;
+		IF ((EntryPrice - High) < (MaxProfitPoint - DollarRisk2)) And High >= ParabolicValue And MaxProfitPoint > BackProfitMin Then Begin
+			ExitShort ("SX2-BP") Next Bar at ParabolicValue Stop;
+			BackProfigFlag = Signal;
+    	End;
+		If OrderPrice + DollarRisk2 >= ParabolicValue Then Begin
+			If MarketPosition = -1 Then Begin
+				ExitShort ("SX2") Next Bar at OrderPrice + DollarRisk2 Stop;
+			End;
+			If High >= OrderPrice + DollarRisk2 Then Begin				
+					ExitFlag = 1;		
+			End;
+		End;
+	End;
+
+	If Open[1] >=300 AND Open[1] < 400 Then Begin		
+		If Low <= OrderPrice - Target3 Then Begin
+			OrderPrice = Open of Next Bar ;
+		End;
+		If High >= OrderPrice + DollarRisk3 And ((OrderPrice + DollarRisk3) < ParabolicValue) Then Begin
+			OrderPrice = Open of Next Bar ;
+		End;
+		IF ((EntryPrice - High) < (MaxProfitPoint - DollarRisk3)) And High >= ParabolicValue And MaxProfitPoint > BackProfitMin Then Begin
+			ExitShort ("SX3-BP") Next Bar at ParabolicValue Stop;
+			BackProfigFlag = Signal;
+    	End;
+		If OrderPrice + DollarRisk3 >= ParabolicValue Then Begin
+			If MarketPosition = -1 Then Begin
+				ExitShort ("SX3") Next Bar at OrderPrice + DollarRisk3 Stop;
+			End;
+			If High >= OrderPrice + DollarRisk3 Then Begin					
+					ExitFlag = 1;		
+			End;
+		End;
+	End;
+	
+End;
+
+If ExitFlag = 1 Then Begin
+	Signal = 0;
+End;
+
+If Signal = 0 Then Begin
+	If Low <= ParabolicValue Then Begin
+		If(NAvg < Low) OR (PositionProfit(1) < 0) Then Begin	
+			Sell ("Short") Next Bar at Open;
+		End;
+		SignalFlag = -1;
+		times = 0;
+		ExitFlag = 0;
+		OrderPrice = Open of Next Bar ;
+		IniPrice = Open of Next Bar;
+	End;
+
+	If High >= ParabolicValue Then Begin	
+		If(NAvg > High) OR (PositionProfit(1) < 0) Then Begin
+			Buy ("Long") Next Bar at Open;
+		End;
+		SignalFlag = 1;
+		times = 0;
+		ExitFlag = 0;
+		OrderPrice = Open of Next Bar ;
+		IniPrice = Open of Next Bar;
+	End;
+End;
+
+If times=0 Then Begin
+	Signal = SignalFlag;
+	times = times + 1;
+End;
+
+If Signal = 1 AND MarketPosition = 0 AND BackProfigFlag <> Signal Then Begin
+	If(NAvg > Low) Then Begin
+		Buy ("Long3") Next Bar at IniPrice Limit; 
+		BackProfigFlag = 0;
+	End;
+End;
+If Signal = -1 AND MarketPosition = 0 AND BackProfigFlag <> Signal Then Begin
+	If(NAvg < High) Then Begin
+		Sell ("Short3") Next Bar at IniPrice Limit;
+		BackProfigFlag = 0;
+	End;
+End;
+
+If Signal = 1 AND MarketPosition = 0 Then Begin
+	If(NAvg > Low) Then Begin
+		Buy ("Long2") Next Bar at IniPrice Limit; 
+		BackProfigFlag = 0;
+	End;
+End;
+If Signal = -1 AND MarketPosition = 0 Then Begin
+	If(NAvg < High) Then Begin
+		Sell ("Short2") Next Bar at IniPrice Limit;
+		BackProfigFlag = 0;
+	End;
+End;
