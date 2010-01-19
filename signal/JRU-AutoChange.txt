@@ -1,0 +1,240 @@
+Inputs: AccelFactor(.02), Target(0), Target2(0), Target3(0), DollarRisk(0), DollarRisk2(0), DollarRisk3(0), BackProfitMin(0), RstOrder(0), AutoChange(0);
+Variables: ParabolicValue(0), OrderPrice(0), times(0), Inprice(0), Signal(0), SignalFlag(0), ExitFlag(0), IniPrice(0), NoAutoChange(True);
+inputs:LengthHigh(50),LengthLow(50);
+variables:NAvg(0), MaxProfitPoint(0), BackProfigFlag(0);
+
+{*
+NHigh=highest(High,LengthHigh)[1];
+NLow=lowest(Low,LengthLow)[1];
+*}
+NAvg = NBarsAvgWithHAndL( LengthHigh , LengthLow );
+MaxProfitPoint = MaxPositionProfit/5000;
+ParabolicValue = Parabolic(AccelFactor);
+
+Print(date,time,OrderPrice);
+If Signal = 1 AND times > 0 AND ExitFlag = 0 Then Begin
+	
+	If Open[1] >=100 AND Open[1] < 200 Then Begin		
+		If High >= OrderPrice + Target Then Begin
+			OrderPrice = Open of Next Bar ;
+		End;
+		If Low <= OrderPrice - DollarRisk And ((OrderPrice - DollarRisk) > ParabolicValue) Then Begin
+			OrderPrice = Open of Next Bar ;
+		End;
+		IF ((Low - EntryPrice) < (MaxProfitPoint - DollarRisk)) And Low <= ParabolicValue And MaxProfitPoint > BackProfitMin Then Begin
+			ExitLong ("LX-BP") Next Bar at ParabolicValue Stop;
+			BackProfigFlag = Signal;
+    	End;
+		If OrderPrice - DollarRisk <= ParabolicValue Then Begin
+			If MarketPosition = 1 Then Begin
+				ExitLong ("LX") Next Bar at OrderPrice - DollarRisk Stop;
+			End;
+			If Low <= OrderPrice - DollarRisk Then Begin				
+				ExitFlag = 1;
+			End;
+		End;
+	End;
+
+	If Open[1] >=200 AND Open[1] < 300 Then Begin		
+		If High >= OrderPrice + Target2 Then Begin
+			OrderPrice = Open of Next Bar ;
+		End;
+		If Low <= OrderPrice - DollarRisk2 And ((OrderPrice - DollarRisk2) > ParabolicValue) Then Begin
+			OrderPrice = Open of Next Bar ;
+		End;
+		IF ((Low - EntryPrice) < (MaxProfitPoint - DollarRisk2)) And Low <= ParabolicValue And MaxProfitPoint > BackProfitMin Then Begin
+			ExitLong ("LX2-BP") Next Bar at ParabolicValue Stop;
+			BackProfigFlag = Signal;
+    	End;
+		If OrderPrice - DollarRisk2 <= ParabolicValue Then Begin
+			If MarketPosition = 1 Then Begin
+				ExitLong ("LX2") Next Bar at OrderPrice - DollarRisk2 Stop;	
+			End;
+			If Low <= OrderPrice - DollarRisk2 Then Begin
+				ExitFlag = 1;
+			End;
+		End;
+	End;
+
+	If Open[1] >=300 AND Open[1] < 400 Then Begin	
+		If High >= OrderPrice + Target3 Then Begin
+			OrderPrice = Open of Next Bar ;
+		End;
+		If Low <= OrderPrice - DollarRisk3 And ((OrderPrice - DollarRisk3) > ParabolicValue) Then Begin
+			OrderPrice = Open of Next Bar ;
+		End;
+		IF ((Low - EntryPrice) < (MaxProfitPoint - DollarRisk3)) And Low <= ParabolicValue And MaxProfitPoint > BackProfitMin Then Begin
+			ExitLong ("LX3-BP") Next Bar at ParabolicValue Stop;
+			BackProfigFlag = Signal;
+    	End;
+		If OrderPrice - DollarRisk3 <= ParabolicValue Then Begin
+			If MarketPosition = 1 Then Begin
+				ExitLong ("LX3") Next Bar at OrderPrice - DollarRisk3 Stop;
+			End;
+			If Low <= OrderPrice - DollarRisk3 Then Begin				
+				ExitFlag = 1;
+			End;
+		End;
+	End;
+End;
+
+If Signal = -1 AND times > 0 AND ExitFlag = 0 Then Begin
+
+	If Open[1] >=100 AND Open[1] < 200 Then Begin
+		If Low <= OrderPrice - Target Then Begin
+			OrderPrice = Open of Next Bar ;
+		End;
+		If High >= OrderPrice + DollarRisk And ((OrderPrice + DollarRisk) < ParabolicValue) Then Begin
+			OrderPrice = Open of Next Bar ;
+		End;
+		IF ((EntryPrice - High) < (MaxProfitPoint - DollarRisk)) And High >= ParabolicValue And MaxProfitPoint > BackProfitMin Then Begin
+			ExitShort ("SX-BP") Next Bar at ParabolicValue Stop;
+			BackProfigFlag = Signal;
+    	End;
+		If OrderPrice + DollarRisk >= ParabolicValue Then Begin
+			If MarketPosition = -1 Then Begin
+				ExitShort ("SX") Next Bar at OrderPrice + DollarRisk Stop;
+			End;
+			If High >= OrderPrice + DollarRisk Then Begin				
+				ExitFlag = 1;
+			End;
+		End;
+	End;
+
+	If Open[1] >=200 AND Open[1] < 300 Then Begin		
+		If Low <= OrderPrice - Target2 Then Begin
+			OrderPrice = Open of Next Bar ;
+		End;
+		If High >= OrderPrice + DollarRisk2 And ((OrderPrice + DollarRisk2) < ParabolicValue) Then Begin
+			OrderPrice = Open of Next Bar ;
+		End;
+		IF ((EntryPrice - High) < (MaxProfitPoint - DollarRisk2)) And High >= ParabolicValue And MaxProfitPoint > BackProfitMin Then Begin
+			ExitShort ("SX2-BP") Next Bar at ParabolicValue Stop;
+			BackProfigFlag = Signal;
+    	End;
+		If OrderPrice + DollarRisk2 >= ParabolicValue Then Begin
+			If MarketPosition = -1 Then Begin
+				ExitShort ("SX2") Next Bar at OrderPrice + DollarRisk2 Stop;
+			End;
+			If High >= OrderPrice + DollarRisk2 Then Begin				
+					ExitFlag = 1;		
+			End;
+		End;
+	End;
+
+	If Open[1] >=300 AND Open[1] < 400 Then Begin		
+		If Low <= OrderPrice - Target3 Then Begin
+			OrderPrice = Open of Next Bar ;
+		End;
+		If High >= OrderPrice + DollarRisk3 And ((OrderPrice + DollarRisk3) < ParabolicValue) Then Begin
+			OrderPrice = Open of Next Bar ;
+		End;
+		IF ((EntryPrice - High) < (MaxProfitPoint - DollarRisk3)) And High >= ParabolicValue And MaxProfitPoint > BackProfitMin Then Begin
+			ExitShort ("SX3-BP") Next Bar at ParabolicValue Stop;
+			BackProfigFlag = Signal;
+    	End;
+		If OrderPrice + DollarRisk3 >= ParabolicValue Then Begin
+			If MarketPosition = -1 Then Begin
+				ExitShort ("SX3") Next Bar at OrderPrice + DollarRisk3 Stop;
+			End;
+			If High >= OrderPrice + DollarRisk3 Then Begin					
+					ExitFlag = 1;		
+			End;
+		End;
+	End;
+	
+End;
+
+Condition1 = PositionProfit(1) < 0 AND PositionProfit(2) < 0 AND Open >= lowest(Low,LengthLow)[1] + AutoChange;
+Condition2 = PositionProfit(1) < 0 AND PositionProfit(2) < 0 AND Open <= highest(High,LengthHigh)[1] - AutoChange;
+
+If ExitFlag = 1 Then Begin
+	Signal = 0;
+
+	IF(High >= ParabolicValue) Then Begin	
+		IF(Condition1 <> True) Then Begin
+			NoAutoChange = True;
+		End;
+
+		IF(Condition1) Then Begin
+			NoAutoChange = False;
+		End;
+	End;
+
+	IF(High <= ParabolicValue) Then Begin	
+		IF(Condition2 <> True) Then Begin
+			NoAutoChange = True;
+		End;
+
+		IF(Condition2) Then Begin
+			NoAutoChange = False;
+		End;
+	End;
+End;
+
+If Signal = 0 Then Begin
+	If Low <= ParabolicValue Then Begin
+		SignalFlag = -1;
+		times = 0;
+		ExitFlag = 0;
+		OrderPrice = Open of Next Bar ;
+		IniPrice = Open of Next Bar;
+		If((NAvg < Low) OR (PositionProfit(1) < 0)) AND (NoAutoChange) Then Begin			
+			Sell ("Short") Next Bar at Open;
+			IF((OrderPrice + RstOrder) >= highest(High,LengthHigh)[1]) Then
+				OrderPrice = highest(High,LengthHigh)[1];
+		End;
+	End;
+
+	If High >= ParabolicValue Then Begin	
+		SignalFlag = 1;
+		times = 0;
+		ExitFlag = 0;
+		OrderPrice = Open of Next Bar ;
+		IniPrice = Open of Next Bar;
+		If((NAvg > High) OR (PositionProfit(1) < 0)) AND (NoAutoChange) Then Begin			
+			Buy ("Long") Next Bar at Open;
+			IF((OrderPrice - RstOrder) <= lowest(Low,LengthLow)[1]) Then
+				OrderPrice = lowest(Low,LengthLow)[1];
+		End;
+	End;
+End;
+
+If times=0 Then Begin
+	Signal = SignalFlag;
+	times = times + 1;
+End;
+
+If Signal = 1 AND MarketPosition = 0 AND BackProfigFlag <> Signal Then Begin
+	If(NAvg > Low) AND (NoAutoChange) Then Begin
+		Buy ("Long3") Next Bar at IniPrice Limit; 
+		BackProfigFlag = 0;
+		IF((OrderPrice - RstOrder) <= lowest(Low,LengthLow)[1]) Then
+			OrderPrice = lowest(Low,LengthLow)[1];
+	End;
+End;
+If Signal = -1 AND MarketPosition = 0 AND BackProfigFlag <> Signal Then Begin
+	If(NAvg < High) AND (NoAutoChange) Then Begin
+		Sell ("Short3") Next Bar at IniPrice Limit;
+		BackProfigFlag = 0;
+		IF((OrderPrice + RstOrder) >= highest(High,LengthHigh)[1]) Then
+			OrderPrice = highest(High,LengthHigh)[1];
+	End;
+End;
+
+If Signal = 1 AND MarketPosition = 0 Then Begin
+	If(NAvg > Low) AND (NoAutoChange) Then Begin
+		Buy ("Long2") Next Bar at IniPrice Limit; 
+		BackProfigFlag = 0;
+		IF((OrderPrice - RstOrder) <= lowest(Low,LengthLow)[1]) Then
+			OrderPrice = lowest(Low,LengthLow)[1];
+	End;
+End;
+If Signal = -1 AND MarketPosition = 0 Then Begin
+	If(NAvg < High) AND (NoAutoChange) Then Begin
+		Sell ("Short2") Next Bar at IniPrice Limit;
+		BackProfigFlag = 0;
+		IF((OrderPrice + RstOrder) >= highest(High,LengthHigh)[1]) Then
+			OrderPrice = highest(High,LengthHigh)[1];
+	End;
+End;
