@@ -11,7 +11,9 @@ NAvg = NBarsAvgWithHAndL( LengthHigh , LengthLow );
 MaxProfitPoint = MaxPositionProfit/5000;
 ParabolicValue = Parabolic(AccelFactor);
 
+{
 Print(date,time,OrderPrice);
+}
 If Signal = 1 AND times > 0 AND ExitFlag = 0 Then Begin
 	
 	If Open[1] >=100 AND Open[1] < 200 Then Begin		
@@ -161,7 +163,7 @@ If ExitFlag = 1 Then Begin
 		End;
 	End;
 
-	IF(High <= ParabolicValue) Then Begin	
+	IF(Low <= ParabolicValue) Then Begin
 		IF(Condition2 <> True) Then Begin
 			NoAutoChange = True;
 		End;
